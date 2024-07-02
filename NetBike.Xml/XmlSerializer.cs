@@ -18,6 +18,8 @@
 
         public XmlSerializerSettings Settings { get; }
 
+        private XmlSerializationContext _context;
+
         public bool CanSerialize(Type valueType)
         {
             return this.Settings.GetTypeContext(valueType).WriteConverter != null;
@@ -67,8 +69,10 @@
 
         public void Serialize(XmlWriter writer, Type valueType, object value)
         {
-            var context = new XmlSerializationContext(this.Settings);
-            context.Serialize(writer, value, valueType);
+            if (_context == null)
+                _context = new XmlSerializationContext(this.Settings);
+
+            _context.Serialize(writer, value, valueType);
             writer.Flush();
         }
 
@@ -121,8 +125,10 @@
                 throw new ArgumentNullException(nameof(valueType));
             }
 
-            var context = new XmlSerializationContext(this.Settings);
-            return context.Deserialize(reader, valueType);
+            if (_context == null)
+                _context = new XmlSerializationContext(this.Settings);
+
+            return _context.Deserialize(reader, valueType);
         }
     }
 }
