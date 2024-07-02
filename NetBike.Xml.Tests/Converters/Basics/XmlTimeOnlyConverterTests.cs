@@ -47,7 +47,9 @@
             Assert.AreEqual(sample.Value, actual);
         }
 
-        [Test, TestCaseSource(nameof(Samples))]
+        [Test]
+        [TestCaseSource(nameof(Samples))]
+        [TestCaseSource(nameof(AlternativeReadSamples))]
         public void ReadAttributeTest(BasicSample sample)
         {
             var xml = $"<xml value=\"{sample.StringValue}\" />";
@@ -71,5 +73,13 @@
             new BasicSample("PT0S", TimeOnly.MinValue),
             new BasicSample("PT2M34S", new TimeOnly(0, 2, 34)),
         };
+
+        private static IEnumerable<BasicSample> AlternativeReadSamples =>
+            new[]
+            {
+                new BasicSample("00:00", TimeOnly.MinValue),
+                new BasicSample("00:20:34", new TimeOnly(0, 20, 34)),
+                new BasicSample("12:34:56", new TimeOnly(12, 34, 56)),
+            };
     }
 }

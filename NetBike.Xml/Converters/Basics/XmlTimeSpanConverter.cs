@@ -7,6 +7,10 @@
     {
         protected override TimeSpan Parse(string value, XmlSerializationContext context)
         {
+            // Support alternative format
+            if(TimeSpan.TryParse(value, out var result))
+                return result;
+
             return XmlConvert.ToTimeSpan(value);
         }
 

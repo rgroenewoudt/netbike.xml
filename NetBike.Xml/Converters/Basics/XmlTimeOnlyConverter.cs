@@ -9,6 +9,10 @@ namespace NetBike.Xml.Converters.Basics
     {
         protected override TimeOnly Parse(string value, XmlSerializationContext context)
         {
+            // Support alternative format
+            if(TimeOnly.TryParse(value, out var result))
+                return result;
+
             return TimeOnly.FromTimeSpan(XmlConvert.ToTimeSpan(value));
         }
 
